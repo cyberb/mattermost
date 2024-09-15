@@ -4518,7 +4518,11 @@ func (s *ServiceSettings) isValid() *AppError {
 
 	host, port, _ := net.SplitHostPort(*s.ListenAddress)
 	var isValidHost bool
-	if host == "" {
+	if strings.HasPrefix(*s.ListenAddress, "/") {
+		host = *s.ListenAddress
+		port = "0"
+		isValidHost = true
+	} else if host == "" {
 		isValidHost = true
 	} else {
 		isValidHost = (net.ParseIP(host) != nil) || isDomainName(host)
