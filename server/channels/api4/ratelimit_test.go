@@ -35,8 +35,7 @@ func TestRateLimitingMiddleware(t *testing.T) {
 	licenseStore.On("Get", "").Return(&model.LicenseRecord{}, nil)
 	th.App.Srv().Store().(*storemocks.Store).On("License").Return(&licenseStore)
 
-	port := th.App.Srv().ListenAddr.Port
-	url := fmt.Sprintf("http://localhost:%v/api/v4/system/ping", port)
+	url := fmt.Sprintf("http://%s/api/v4/system/ping", th.App.Srv().ListenAddr.String())
 	client := &http.Client{}
 
 	t.Run("requests within burst succeed", func(t *testing.T) {
@@ -92,8 +91,7 @@ func TestRateLimitingVaryByHeader(t *testing.T) {
 	licenseStore.On("Get", "").Return(&model.LicenseRecord{}, nil)
 	th.App.Srv().Store().(*storemocks.Store).On("License").Return(&licenseStore)
 
-	port := th.App.Srv().ListenAddr.Port
-	url := fmt.Sprintf("http://localhost:%v/api/v4/system/ping", port)
+	url := fmt.Sprintf("http://%s/api/v4/system/ping", th.App.Srv().ListenAddr.String())
 	client := &http.Client{}
 
 	// 2 requests with client-A should succeed
@@ -156,8 +154,7 @@ func TestRateLimitingVaryByUser(t *testing.T) {
 	require.NoError(t, err)
 	th.App.Srv().RateLimiter = rl
 
-	port := th.App.Srv().ListenAddr.Port
-	url := fmt.Sprintf("http://localhost:%v/api/v4/system/ping", port)
+	url := fmt.Sprintf("http://%s/api/v4/system/ping", th.App.Srv().ListenAddr.String())
 	client := &http.Client{}
 
 	userAToken := th.Client.AuthToken
