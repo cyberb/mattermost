@@ -566,7 +566,7 @@ func (th *TestHelper) DeleteBots(tb testing.TB) *TestHelper {
 
 func (th *TestHelper) waitForConnectivity(tb testing.TB) {
 	for range 1000 {
-		conn, err := net.Dial("tcp", fmt.Sprintf("localhost:%v", th.App.Srv().ListenAddr.Port))
+		conn, err := net.Dial("tcp", th.App.Srv().ListenAddr.String())
 		if err == nil {
 			conn.Close()
 			return
@@ -577,7 +577,7 @@ func (th *TestHelper) waitForConnectivity(tb testing.TB) {
 }
 
 func (th *TestHelper) CreateClient() *model.Client4 {
-	return model.NewAPIv4Client(fmt.Sprintf("http://localhost:%v", th.App.Srv().ListenAddr.Port))
+	return model.NewAPIv4Client(fmt.Sprint("http://", th.App.Srv().ListenAddr.String()))
 }
 
 // ToDo: maybe move this to NewAPIv4SocketClient and reuse it in mmctl
@@ -624,15 +624,20 @@ func (th *TestHelper) CreateConnectedWebSocketClientWithClient(tb testing.TB, cl
 }
 
 func (th *TestHelper) CreateWebSocketClient() (*model.WebSocketClient, error) {
-	return model.NewWebSocketClient4(fmt.Sprintf("ws://localhost:%v", th.App.Srv().ListenAddr.Port), th.Client.AuthToken)
+	return model.NewWebSocketClient4(fmt.Sprint("ws://", th.App.Srv().ListenAddr.String()), th.Client.AuthToken)
 }
 
 func (th *TestHelper) CreateReliableWebSocketClient(connID string, seqNo int) (*model.WebSocketClient, error) {
-	return model.NewReliableWebSocketClientWithDialer(websocket.DefaultDialer, fmt.Sprintf("ws://localhost:%v", th.App.Srv().ListenAddr.Port), th.Client.AuthToken, connID, seqNo, true)
+	return model.NewReliableWebSocketClientWithDialer(websocket.DefaultDialer, fmt.Sprint("ws://", th.App.Srv().ListenAddr.String()), th.Client.AuthToken, connID, seqNo, true)
 }
 
+func (th *TestHelper) CreateWebSocketSystemAdminClient() (*model.WebSocketClient, error) {
+	return model.NewWebSocketClient4(fmt.Sprint("ws://", th.App.Srv().ListenAddr.String()), th.SystemAdminClient.AuthToken)
+}
+
+
 func (th *TestHelper) CreateWebSocketClientWithClient(client *model.Client4) (*model.WebSocketClient, error) {
-	return model.NewWebSocketClient4(fmt.Sprintf("ws://localhost:%v", th.App.Srv().ListenAddr.Port), client.AuthToken)
+	return model.NewWebSocketClient4(fmt.Sprint("ws://", th.App.Srv().ListenAddr.String()), client.AuthToken)
 }
 
 func (th *TestHelper) CreateBotWithSystemAdminClient(tb testing.TB) *model.Bot {

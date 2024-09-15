@@ -2322,7 +2322,7 @@ func TestPluginHTTPConnHijack(t *testing.T) {
 	pluginID := ids[0]
 	require.NotEmpty(t, pluginID)
 
-	reqURL := fmt.Sprintf("http://localhost:%d/plugins/%s", th.Server.ListenAddr.Port, pluginID)
+	reqURL := fmt.Sprintf("http://%s/plugins/%s", th.Server.ListenAddr.String(), pluginID)
 	req, err := http.NewRequest("GET", reqURL, nil)
 	require.NoError(t, err)
 
@@ -2440,7 +2440,7 @@ func TestPluginHTTPUpgradeWebSocket(t *testing.T) {
 	pluginID := ids[0]
 	require.NotEmpty(t, pluginID)
 
-	reqURL := fmt.Sprintf("ws://localhost:%d/plugins/%s", th.Server.ListenAddr.Port, pluginID)
+	reqURL := fmt.Sprintf("ws://%s/plugins/%s", th.Server.ListenAddr.String(), pluginID)
 	wsc, err := model.NewWebSocketClient(reqURL, "")
 	require.NoError(t, err)
 	require.NotNil(t, wsc)
