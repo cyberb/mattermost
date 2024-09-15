@@ -5,6 +5,7 @@ package app
 
 import (
 	"bufio"
+	"context"
 	"crypto/tls"
 	"errors"
 	"fmt"
@@ -14,7 +15,6 @@ import (
 	"net/http/httptest"
 	"os"
 	"path"
-	"strconv"
 	"strings"
 	"sync"
 	"testing"
@@ -59,8 +59,31 @@ func TestStartServerSuccess(t *testing.T) {
 	serverErr := s.Start()
 
 	client := &http.Client{}
-	err = checkEndpoint(t, client, "http://localhost:"+strconv.Itoa(s.ListenAddr.Port)+"/")
+	err = checkEndpoint(t, client, "http://"+s.ListenAddr.String()+"/")
 	require.NoError(t, err)
+
+	s.Shutdown()
+	require.NoError(t, serverErr)
+}
+
+func TestStartServerUnixSocketSuccess(t *testing.T) {
+	tempDir := t.TempDir()
+	socket := tempDir + "/socket"
+	s, err := newServerWithConfig(t, func(cfg *model.Config) {
+		*cfg.ServiceSettings.ListenAddress = socket
+	})
+	require.NoError(t, err)
+
+	serverErr := s.Start()
+
+	client := &http.Client{
+		Transport: &http.Transport{
+			DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
+				return net.Dial("unix", socket)
+			},
+		},
+	}
+	err = checkEndpoint(t, client, "http://unix/")
 
 	s.Shutdown()
 	require.NoError(t, serverErr)
@@ -160,7 +183,7 @@ func TestStartServerTLSSuccess(t *testing.T) {
 	}
 
 	client := &http.Client{Transport: tr}
-	err = checkEndpoint(t, client, "https://localhost:"+strconv.Itoa(s.ListenAddr.Port)+"/")
+	err = checkEndpoint(t, client, "https://"+s.ListenAddr.String()+"/")
 	require.NoError(t, err)
 
 	s.Shutdown()
@@ -199,7 +222,7 @@ func TestStartServerTLSVersion(t *testing.T) {
 	}
 
 	client := &http.Client{Transport: tr}
-	err = checkEndpoint(t, client, "https://localhost:"+strconv.Itoa(s.ListenAddr.Port)+"/")
+	err = checkEndpoint(t, client, "https://"+s.ListenAddr.String()+"/")
 	require.Error(t, err)
 
 	client.Transport = &http.Transport{
@@ -208,7 +231,7 @@ func TestStartServerTLSVersion(t *testing.T) {
 		},
 	}
 
-	err = checkEndpoint(t, client, "https://localhost:"+strconv.Itoa(s.ListenAddr.Port)+"/")
+	err = checkEndpoint(t, client, "https://"+s.ListenAddr.String()+"/")
 	if err != nil {
 		t.Errorf("Expected nil, got %s", err)
 	}
@@ -249,7 +272,7 @@ func TestStartServerTLSOverwriteCipher(t *testing.T) {
 	}
 
 	client := &http.Client{Transport: tr}
-	err = checkEndpoint(t, client, "https://localhost:"+strconv.Itoa(s.ListenAddr.Port)+"/")
+	err = checkEndpoint(t, client, "https://"+s.ListenAddr.String()+"/")
 	require.Error(t, err, "Expected error due to Cipher mismatch")
 	require.Contains(t, err.Error(), "remote error: tls: handshake failure", "Expected protocol version error")
 
@@ -264,7 +287,7 @@ func TestStartServerTLSOverwriteCipher(t *testing.T) {
 		},
 	}
 
-	err = checkEndpoint(t, client, "https://localhost:"+strconv.Itoa(s.ListenAddr.Port)+"/")
+	err = checkEndpoint(t, client, "https://"+s.ListenAddr.String()+"/")
 	require.NoError(t, err)
 }
 
@@ -344,7 +367,7 @@ func TestPanicLog(t *testing.T) {
 	}
 
 	client := &http.Client{Transport: tr}
-	_, err = client.Get("https://localhost:" + strconv.Itoa(s.ListenAddr.Port) + "/panic")
+	_, err = client.Get("https://" + s.ListenAddr.String() + "/panic")
 	require.Error(t, err)
 
 	err = logger.Flush()
@@ -439,7 +462,7 @@ func TestSentry(t *testing.T) {
 		require.NoError(t, s.Start())
 		defer s.Shutdown()
 
-		resp, err := client.Get("https://localhost:" + strconv.Itoa(s.ListenAddr.Port) + "/panic")
+		resp, err := client.Get("https://" + s.ListenAddr.String() + "/panic")
 		require.Nil(t, resp)
 		require.True(t, errors.Is(err, io.EOF), fmt.Sprintf("unexpected error: %s", err))
 
@@ -484,7 +507,7 @@ func TestSentry(t *testing.T) {
 		require.NoError(t, s.Start())
 		defer s.Shutdown()
 
-		resp, err := client.Get("https://localhost:" + strconv.Itoa(s.ListenAddr.Port) + "/panic")
+		resp, err := client.Get("https://" + s.ListenAddr.String() + "/panic")
 		require.Nil(t, resp)
 		require.True(t, errors.Is(err, io.EOF), fmt.Sprintf("unexpected error: %s", err))
 

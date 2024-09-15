@@ -3252,7 +3252,7 @@ func TestPluginHTTPConnHijack(t *testing.T) {
 	pluginID := ids[0]
 	require.NotEmpty(t, pluginID)
 
-	reqURL := fmt.Sprintf("http://localhost:%d/plugins/%s", th.Server.ListenAddr.Port, pluginID)
+	reqURL := fmt.Sprintf("http://%s/plugins/%s", th.Server.ListenAddr.String(), pluginID)
 	req, err := http.NewRequest("GET", reqURL, nil)
 	require.NoError(t, err)
 
@@ -3267,10 +3267,10 @@ func TestPluginHTTPConnHijack(t *testing.T) {
 	require.Equal(t, "OK", string(body))
 }
 
-func makePluginHTTPRequest(t *testing.T, pluginID string, port int, token string) string {
+func makePluginHTTPRequest(t *testing.T, pluginID string, addr string, token string) string {
 	t.Helper()
 	client := &http.Client{}
-	reqURL := fmt.Sprintf("http://localhost:%d/plugins/%s", port, pluginID)
+	reqURL := fmt.Sprintf("http://%s/plugins/%s", addr, pluginID)
 	req, err := http.NewRequest("GET", reqURL, nil)
 	require.NoError(t, err)
 	req.Header.Set(model.HeaderAuth, model.HeaderToken+" "+token)
@@ -3336,7 +3336,7 @@ func TestPluginMFAEnforcement(t *testing.T) {
 		})
 
 		// Should return user ID since MFA is not enforced
-		userID := makePluginHTTPRequest(t, pluginID, th.Server.ListenAddr.Port, session.Token)
+		userID := makePluginHTTPRequest(t, pluginID, th.Server.ListenAddr.String(), session.Token)
 		assert.Equal(t, user.Id, userID)
 	})
 
@@ -3347,7 +3347,7 @@ func TestPluginMFAEnforcement(t *testing.T) {
 		})
 
 		// Should return empty string since MFA is enforced but not active
-		userID := makePluginHTTPRequest(t, pluginID, th.Server.ListenAddr.Port, session.Token)
+		userID := makePluginHTTPRequest(t, pluginID, th.Server.ListenAddr.String(), session.Token)
 		assert.Empty(t, userID)
 	})
 }
@@ -3370,7 +3370,7 @@ func TestPluginHTTPUpgradeWebSocket(t *testing.T) {
 	pluginID := ids[0]
 	require.NotEmpty(t, pluginID)
 
-	reqURL := fmt.Sprintf("ws://localhost:%d/plugins/%s", th.Server.ListenAddr.Port, pluginID)
+	reqURL := fmt.Sprintf("ws://%s/plugins/%s", th.Server.ListenAddr.String(), pluginID)
 	wsc, err := model.NewWebSocketClient(reqURL, "")
 	require.NoError(t, err)
 	require.NotNil(t, wsc)
@@ -4231,7 +4231,7 @@ func TestPluginServeHTTPCompatibility(t *testing.T) {
 			require.Len(t, ids, 1)
 			pluginID := ids[0]
 
-			res := makePluginHTTPRequest(t, pluginID, th.Server.ListenAddr.Port, "")
+			res := makePluginHTTPRequest(t, pluginID, th.Server.ListenAddr.String(), "")
 			assert.Equal(t, "plugin response", res)
 		})
 	}
