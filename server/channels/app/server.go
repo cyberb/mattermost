@@ -244,6 +244,7 @@ func NewServer(options ...Option) (*Server, error) {
 	// Step 5: Initialize channels.
 	// Depends on s.httpService, and depends on the hub to be initialized.
 	// Otherwise we run into race conditions.
+	RegisterLdapInterface(RegisterSyncloud)
 	channels, err := NewChannels(s)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to initialize channels")
