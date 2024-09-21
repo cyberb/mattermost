@@ -159,7 +159,7 @@ PLUGIN_PACKAGES += mattermost-plugin-boards-v9.0.0
 PLUGIN_PACKAGES += mattermost-plugin-msteams-v2.0.3
 PLUGIN_PACKAGES += mattermost-plugin-user-survey-v1.1.1
 PLUGIN_PACKAGES += mattermost-plugin-mscalendar-v1.3.4
-PLUGIN_PACKAGES += mattermost-plugin-msteams-meetings-v2.2.0
+PLUGIN_PACKAGES += mattermost-plugin-msteams-meetings-v2.1.0
 
 EE_PACKAGES=$(shell $(GO) list $(BUILD_ENTERPRISE_DIR)/...)
 
@@ -279,8 +279,9 @@ prepackaged-plugins: ## Populate the prepackaged-plugins directory.
 	@echo Downloading prepackaged plugins: $(PLUGIN_PACKAGES)
 	mkdir -p prepackaged_plugins
 	@cd prepackaged_plugins && for plugin_package in $(PLUGIN_PACKAGES) ; do \
-		curl -f -O -L https://plugins.releases.mattermost.com/release/$$plugin_package.tar.gz; \
-		curl -f -O -L https://plugins.releases.mattermost.com/release/$$plugin_package.tar.gz.sig; \
+  		echo $$plugin_package; \
+		curl -O -L https://plugins.releases.mattermost.com/release/$$plugin_package.tar.gz; \
+		curl -O -L https://plugins.releases.mattermost.com/release/$$plugin_package.tar.gz.sig; \
 	done
 
 prepackaged-binaries: ## Populate the prepackaged-binaries to the bin directory
