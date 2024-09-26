@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/mattermost/ldap"
 	"github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 	"github.com/mattermost/mattermost/server/public/shared/request"
 	"github.com/mattermost/mattermost/server/v8/einterfaces"
 	"net/http"
@@ -18,6 +19,8 @@ type SyncloudAuth struct {
 }
 
 func (s *SyncloudAuth) DoLogin(c request.CTX, id string, password string) (*model.User, *model.AppError) {
+	mlog.Warn("DoLogin", mlog.String("id", id))
+
 	err := s.authenticate(id, password)
 	if err != nil {
 		return nil, model.NewAppError("ldap", "ldap", nil, "", http.StatusForbidden).Wrap(err)
@@ -27,6 +30,7 @@ func (s *SyncloudAuth) DoLogin(c request.CTX, id string, password string) (*mode
 }
 
 func (s *SyncloudAuth) authenticate(id string, password string) error {
+	mlog.Warn("authenticate", mlog.String("id", id))
 	conn, err := ldap.DialURL("ldap://localhost:389")
 	if err != nil {
 		return err
@@ -40,6 +44,7 @@ func (s *SyncloudAuth) authenticate(id string, password string) error {
 }
 
 func (s *SyncloudAuth) GetUser(c request.CTX, id string) (*model.User, *model.AppError) {
+	mlog.Warn("GetUser", mlog.String("id", id))
 
 	conn, err := ldap.DialURL("ldap://localhost:389")
 	if err != nil {
