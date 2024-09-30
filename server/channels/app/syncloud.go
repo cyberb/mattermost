@@ -53,6 +53,7 @@ func (s *SyncloudAuth) GetUser(c request.CTX, id string) (*model.User, *model.Ap
 		return nil, model.NewAppError("ldap dial", "ldap", nil, "", http.StatusInternalServerError).Wrap(err)
 	}
 	defer conn.Close()
+	mlog.Warn("bind")
 	err = conn.Bind("cn=admin,dc=syncloud,dc=org", "syncloud")
 	if err != nil {
 		mlog.Warn("bind error", mlog.Err(err))
@@ -65,6 +66,7 @@ func (s *SyncloudAuth) GetUser(c request.CTX, id string) (*model.User, *model.Ap
 		fmt.Sprintf("(&(objectclass=inetOrgPerson)(cn=%s))", id),
 		[]string{"cn", "mail", "sn"},
 		nil)
+	mlog.Warn("search")
 
 	sr, err := conn.Search(userSearchRequest)
 	if err != nil {
@@ -74,9 +76,10 @@ func (s *SyncloudAuth) GetUser(c request.CTX, id string) (*model.User, *model.Ap
 	}
 
 	if len(sr.Entries) < 1 {
+		mlog.Warn("not found")
 		return nil, model.NewAppError("ldap user not found", "ldap", nil, "", http.StatusForbidden).Wrap(err)
 	}
-
+	mlog.Warn("found")
 	entry := sr.Entries[0]
 	user := &model.User{
 		AuthService:   model.UserAuthServiceLdap,
@@ -85,7 +88,7 @@ func (s *SyncloudAuth) GetUser(c request.CTX, id string) (*model.User, *model.Ap
 		FirstName:     entry.GetAttributeValue("cn"),
 		LastName:      entry.GetAttributeValue("sn"),
 	}
-
+	mlog.Warn("admin search")
 	adminSearchRequest := ldap.NewSearchRequest(
 		"cn=syncloud,ou=groups,dc=syncloud,dc=org",
 		ldap.ScopeWholeSubtree, ldap.DerefAlways, 0, 0, false,
@@ -99,6 +102,7 @@ func (s *SyncloudAuth) GetUser(c request.CTX, id string) (*model.User, *model.Ap
 	}
 
 	if len(sr.Entries) < 0 {
+		mlog.Warn("admin")
 		user.Roles = model.SystemAdminRoleId
 	}
 
