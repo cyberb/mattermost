@@ -48,11 +48,14 @@ func (s *SyncloudAuth) GetUser(c request.CTX, id string) (*model.User, *model.Ap
 
 	conn, err := ldap.DialURL("ldap://localhost:389")
 	if err != nil {
+		mlog.Warn("dial error", mlog.Error(err))
+
 		return nil, model.NewAppError("ldap dial", "ldap", nil, "", http.StatusInternalServerError).Wrap(err)
 	}
 	defer conn.Close()
 	err = conn.Bind("cn=admin,dc=syncloud,dc=org", "syncloud")
 	if err != nil {
+		mlog.Warn("bind error", mlog.Error(err))
 		return nil, model.NewAppError("ldap bind", "ldap", nil, "", http.StatusInternalServerError).Wrap(err)
 	}
 
@@ -65,6 +68,8 @@ func (s *SyncloudAuth) GetUser(c request.CTX, id string) (*model.User, *model.Ap
 
 	sr, err := conn.Search(userSearchRequest)
 	if err != nil {
+		mlog.Warn("search error", mlog.Error(err))
+
 		return nil, model.NewAppError("ldap user search", "ldap", nil, "", http.StatusInternalServerError).Wrap(err)
 	}
 
