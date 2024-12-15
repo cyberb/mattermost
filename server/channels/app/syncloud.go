@@ -59,7 +59,7 @@ func (s *SyncloudAuth) GetUser(c request.CTX, id string) (*model.User, *model.Ap
 		mlog.Warn("bind error", mlog.Err(err))
 		return nil, model.NewAppError("ldap bind", "ldap", nil, "", http.StatusInternalServerError).Wrap(err)
 	}
-
+mlog.Warn("bound")
 	userSearchRequest := ldap.NewSearchRequest(
 		"ou=users,dc=syncloud,dc=org",
 		ldap.ScopeWholeSubtree, ldap.DerefAlways, 0, 0, false,
