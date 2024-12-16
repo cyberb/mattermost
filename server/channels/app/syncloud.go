@@ -2,7 +2,7 @@ package app
 
 import (
 	"fmt"
-	"github.com/mattermost/ldap"
+	"github.com/go-ldap/ldap/v3"
 	"github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 	"github.com/mattermost/mattermost/server/public/shared/request"
