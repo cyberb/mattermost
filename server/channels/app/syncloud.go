@@ -101,7 +101,7 @@ mlog.Warn("bound")
 		return nil, model.NewAppError("ldap admin search", "ldap", nil, "", http.StatusInternalServerError).Wrap(err)
 	}
 
-	if len(sr.Entries) < 0 {
+	if len(sr.Entries) == 1 {
 		mlog.Warn("admin")
 		user.Roles = model.SystemAdminRoleId
 	}
