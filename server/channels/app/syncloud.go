@@ -64,7 +64,7 @@ mlog.Warn("bound")
 		"ou=users,dc=syncloud,dc=org",
 		ldap.ScopeWholeSubtree, ldap.DerefAlways, 0, 0, false,
 		fmt.Sprintf("(&(objectclass=inetOrgPerson)(cn=%s))", id),
-		[]string{"cn", "mail", "sn"},
+		[]string{"cn", "mail", "sn", "uid"},
 		nil)
 	mlog.Warn("search")
 
@@ -82,6 +82,8 @@ mlog.Warn("bound")
 	mlog.Warn("found")
 	entry := sr.Entries[0]
 	user := &model.User{
+  Id: id,
+  Username: id,
 		AuthService:   model.UserAuthServiceLdap,
 		Email:         entry.GetAttributeValue("mail"),
 		EmailVerified: true,
