@@ -113,80 +113,96 @@ mlog.Warn("bound")
 
 func (s *SyncloudAuth) GetUserAttributes(rctx request.CTX, id string, attributes []string) (map[string]string, *model.AppError) {
 	//TODO implement me
-	panic("implement me")
+	fmt.Println("GetUserAttributes")
+ panic("implement me")
 }
 
 func (s *SyncloudAuth) CheckPassword(c request.CTX, id string, password string) *model.AppError {
 	//TODO implement me
+fmt.Println("CheckPassword")
 	panic("implement me")
 }
 
 func (s *SyncloudAuth) CheckPasswordAuthData(c request.CTX, authData string, password string) *model.AppError {
 	//TODO implement me
+fmt.Println("CheckPasswordAuthData(c")
 	panic("implement me")
 }
 
 func (s *SyncloudAuth) CheckProviderAttributes(c request.CTX, LS *model.LdapSettings, ouser *model.User, patch *model.UserPatch) string {
 	//TODO implement me
+fmt.Println("CheckProviderAttributes")
 	panic("implement me")
 }
 
 func (s *SyncloudAuth) SwitchToLdap(c request.CTX, userID, ldapID, ldapPassword string) *model.AppError {
 	//TODO implement me
-	panic("implement me")
+	fmt.Println("SwitchToLdap")
+panic("implement me")
 }
 
 func (s *SyncloudAuth) StartSynchronizeJob(c request.CTX, waitForJobToFinish bool, includeRemovedMembers bool) (*model.Job, *model.AppError) {
 	//TODO implement me
+fmt.Println("StartSynchronizeJob")
 	panic("implement me")
 }
 
 func (s *SyncloudAuth) RunTest(rctx request.CTX) *model.AppError {
 	//TODO implement me
+fmt.Println("RunTest")
 	panic("implement me")
 }
 
 func (s *SyncloudAuth) GetAllLdapUsers(c request.CTX) ([]*model.User, *model.AppError) {
 	//TODO implement me
+fmt.Println("GetAllLdapUsers")
 	panic("implement me")
 }
 
 func (s *SyncloudAuth) MigrateIDAttribute(c request.CTX, toAttribute string) error {
 	//TODO implement me
+fmt.Println("MigrateIDAttribute")
 	panic("implement me")
 }
 
 func (s *SyncloudAuth) GetGroup(rctx request.CTX, groupUID string) (*model.Group, *model.AppError) {
 	//TODO implement me
-	panic("implement me")
+	fmt.Println("GetGroup")
+panic("implement me")
 }
 
 func (s *SyncloudAuth) GetAllGroupsPage(rctx request.CTX, page int, perPage int, opts model.LdapGroupSearchOpts) ([]*model.Group, int, *model.AppError) {
 	//TODO implement me
+fmt.Println("GetAllGroupsPage")
 	panic("implement me")
 }
 
 func (s *SyncloudAuth) FirstLoginSync(c request.CTX, user *model.User, userAuthService, userAuthData, email string) *model.AppError {
 	//TODO implement me
-	panic("implement me")
+	fmt.Println("FirstLoginSync")
+panic("implement me")
 }
 
 func (s *SyncloudAuth) UpdateProfilePictureIfNecessary(ctx request.CTX, user model.User, session model.Session) {
 	//TODO implement me
+fmt.Println("UpdateProfilePictureIfNecessary")
 	panic("implement me")
 }
 
 func (s *SyncloudAuth) GetADLdapIdFromSAMLId(c request.CTX, authData string) string {
 	//TODO implement me
-	panic("implement me")
+	fmt.Println("GetADLdapIdFromSAMLId")
+panic("implement me")
 }
 
 func (s *SyncloudAuth) GetSAMLIdFromADLdapId(c request.CTX, authData string) string {
 	//TODO implement me
+fmt.Println("GetSAMLIdFromADLdapId")
 	panic("implement me")
 }
 
 func (s *SyncloudAuth) GetVendorNameAndVendorVersion(rctx request.CTX) (string, string, error) {
 	//TODO implement me
+fmt.Println("GetVendorNameAndVendorVersion")
 	panic("implement me")
 }

@@ -468,7 +468,9 @@ func (a *App) GetUserByRemoteID(remoteID string) (*model.User, *model.AppError) 
 }
 
 func (a *App) GetUserByAuth(authData *string, authService string) (*model.User, *model.AppError) {
-	user, err := a.ch.srv.userService.GetUserByAuth(authData, authService)
+ fmt.Println("GetUserByAuth")
+
+user, err := a.ch.srv.userService.GetUserByAuth(authData, authService)
 	if err != nil {
 		var invErr *store.ErrInvalidInput
 		var nfErr *store.ErrNotFound
