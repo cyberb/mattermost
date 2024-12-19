@@ -472,6 +472,7 @@ func (a *App) GetUserByAuth(authData *string, authService string) (*model.User, 
 
 user, err := a.ch.srv.userService.GetUserByAuth(authData, authService)
 	if err != nil {
+fmt.Println("GetUserByAuth err")
 		var invErr *store.ErrInvalidInput
 		var nfErr *store.ErrNotFound
 		switch {
@@ -483,7 +484,7 @@ user, err := a.ch.srv.userService.GetUserByAuth(authData, authService)
 			return nil, model.NewAppError("GetUserByAuth", "app.user.get_by_auth.other.app_error", nil, "", http.StatusInternalServerError).Wrap(err)
 		}
 	}
-
+fmt.Println("GetUserByAuth end")
 	return user, nil
 }
 
