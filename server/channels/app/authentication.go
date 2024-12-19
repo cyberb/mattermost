@@ -139,9 +139,12 @@ func (a *App) DoubleCheckPassword(rctx request.CTX, user *model.User, password s
 }
 
 func (a *App) checkLdapUserPasswordAndAllCriteria(rctx request.CTX, ldapId *string, password string, mfaToken string) (*model.User, *model.AppError) {
+ rctx.Logger().Info("checkLdapUserPasswordAndAllCriteria")
+
 	if a.Ldap() == nil || ldapId == nil {
 		err := model.NewAppError("doLdapAuthentication", "api.user.login_ldap.not_available.app_error", nil, "", http.StatusNotImplemented)
-		return nil, err
+	rctx.Logger().Error("no ldap")
+	return nil, err
 	}
 
 	ldapUser, err := a.Ldap().DoLogin(rctx, *ldapId, password)
