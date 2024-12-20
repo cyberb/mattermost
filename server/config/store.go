@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"sync"
 	"time"
-
+"fmt"
 	"github.com/pkg/errors"
 
 	"github.com/mattermost/mattermost/server/public/model"
@@ -332,6 +332,7 @@ func (s *Store) Load() error {
 	}
 
 	s.config = loadedCfg
+ fmt.Println("ldap enabled", s.config.LdapSettings.Enabled)
 	s.configNoEnv = loadedCfgNoEnv
 
 	loadedCfgCopy := loadedCfg.Clone()

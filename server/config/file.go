@@ -127,6 +127,7 @@ func (fs *FileStore) persist(cfg *model.Config) error {
 
 // Load updates the current configuration from the backing store.
 func (fs *FileStore) Load() ([]byte, error) {
+ fmt.Println("config from file", fs.path)
 	f, err := os.Open(fs.path)
 	if os.IsNotExist(err) {
 		return nil, nil
