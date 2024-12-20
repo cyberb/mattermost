@@ -251,14 +251,14 @@ func checkUserNotBot(user *model.User) *model.AppError {
 }
 
 func (a *App) authenticateUser(rctx request.CTX, user *model.User, password, mfaToken string) (*model.User, *model.AppError) {
-fmt.Println("authenticateUser")	
+fmt.Println("authenticateUser")
 license := a.Srv().License()
-	ldapAvailable := *a.Config().LdapSettings.Enable && a.Ldap() != nil && license != nil && *license.Features.LDAP
+	ldapAvailable := *a.Config().LdapSettings.Enable && a.Ldap() != nil
 
 	if user.AuthService == model.UserAuthServiceLdap {
-fmt.Println("authenticateUser ldap")	
+fmt.Println("authenticateUser ldap")
 		if !ldapAvailable {
-fmt.Println("authenticateUser no ldap")	
+fmt.Println("authenticateUser no ldap")
 			err := model.NewAppError("login", "api.user.login_ldap.not_available.app_error", nil, "", http.StatusNotImplemented)
 			return user, err
 		}
