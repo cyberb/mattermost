@@ -306,7 +306,8 @@ func (ds *DatabaseStore) persist(cfg *model.Config) error {
 
 // Load updates the current configuration from the backing store.
 func (ds *DatabaseStore) Load() ([]byte, error) {
-	var configurationData []byte
+	fmt.Println("config from db", fs.path)
+var configurationData []byte
 
 	row := ds.db.QueryRow("SELECT Value FROM Configurations WHERE Active")
 	if err := row.Scan(&configurationData); err != nil && err != sql.ErrNoRows {
