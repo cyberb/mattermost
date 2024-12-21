@@ -332,7 +332,7 @@ func (s *Store) Load() error {
 	}
 
 	s.config = loadedCfg
- fmt.Println("ldap enabled", s.config.LdapSettings.Enabled)
+ fmt.Println("ldap enabled", s.config.LdapSettings.Enable)
 	s.configNoEnv = loadedCfgNoEnv
 
 	loadedCfgCopy := loadedCfg.Clone()
@@ -412,3 +412,4 @@ func (s *Store) CleanUp() error {
 		return nil
 	}
 }
+
