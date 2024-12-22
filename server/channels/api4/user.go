@@ -1817,7 +1817,8 @@ func sendPasswordReset(c *Context, w http.ResponseWriter, r *http.Request) {
 }
 
 func login(c *Context, w http.ResponseWriter, r *http.Request) {
-	// Mask all sensitive errors, with the exception of the following
+	fmt.Println("login")
+ // Mask all sensitive errors, with the exception of the following
 	defer func() {
 		if c.Err == nil {
 			return
@@ -1909,15 +1910,16 @@ func login(c *Context, w http.ResponseWriter, r *http.Request) {
 	audit.AddEventParameter(auditRec, "device_id", deviceId)
 
 	c.LogAuditWithUserId(id, "attempt - login_id="+loginId)
-
+fmt.Println("login 1")
 	user, err := c.App.AuthenticateUserForLogin(c.AppContext, id, loginId, password, mfaToken, "", ldapOnly)
 	if err != nil {
-		c.LogAuditWithUserId(id, "failure - login_id="+loginId)
+	fmt.Println("login AuthenticateUserForLogin err", err)
+	c.LogAuditWithUserId(id, "failure - login_id="+loginId)
 		c.Err = err
 		return
 	}
 	auditRec.AddEventResultState(user)
- fmt.Println("login")
+ fmt.Println("login 2")
 	if user.IsGuest() {
 fmt.Println("login guest")
 		if c.App.Channels().License() == nil {
@@ -2009,7 +2011,8 @@ func loginWithDesktopToken(c *Context, w http.ResponseWriter, r *http.Request) {
 }
 
 func loginCWS(c *Context, w http.ResponseWriter, r *http.Request) {
-	campaignToURL := map[string]string{
+ fmt.Println("login cws")
+campaignToURL := map[string]string{
 		"focalboard": "/boards",
 	}
 
@@ -2040,11 +2043,13 @@ func loginCWS(c *Context, w http.ResponseWriter, r *http.Request) {
 	audit.AddEventParameter(auditRec, "login_id", loginID)
 	user, err := c.App.AuthenticateUserForLogin(c.AppContext, "", loginID, "", "", token, false)
 	if err != nil {
+fmt.Println("login AuthenticateUserForLogin err", err)
 		c.LogAuditWithUserId("", "failure - login_id="+loginID)
 		c.LogErrorByCode(err)
 		http.Redirect(w, r, *c.App.Config().ServiceSettings.SiteURL, http.StatusFound)
 		return
 	}
+
 	audit.AddEventParameterAuditable(auditRec, "user", user)
 	c.LogAuditWithUserId(user.Id, "authenticated")
 	isMobileDevice := utils.IsMobileRequest(r)
