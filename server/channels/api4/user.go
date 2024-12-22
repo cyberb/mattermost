@@ -1917,8 +1917,9 @@ func login(c *Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	auditRec.AddEventResultState(user)
-
+ fmt.Println("login")
 	if user.IsGuest() {
+fmt.Println("login guest")
 		if c.App.Channels().License() == nil {
 			c.Err = model.NewAppError("login", "api.user.login.guest_accounts.license.error", nil, "", http.StatusUnauthorized)
 			return
@@ -1930,6 +1931,7 @@ func login(c *Context, w http.ResponseWriter, r *http.Request) {
 	}
 
 	if user.IsRemote() {
+fmt.Println("login is remote")
 		c.Err = model.NewAppError("login", "api.user.login.remote_users.login.error", nil, "", http.StatusUnauthorized)
 		return
 	}
@@ -1939,6 +1941,7 @@ func login(c *Context, w http.ResponseWriter, r *http.Request) {
 	isMobileDevice := utils.IsMobileRequest(r)
 	session, err := c.App.DoLogin(c.AppContext, w, r, user, deviceId, isMobileDevice, false, false)
 	if err != nil {
+fmt.Println("login err", err)
 		c.Err = err
 		return
 	}
@@ -1952,7 +1955,8 @@ func login(c *Context, w http.ResponseWriter, r *http.Request) {
 
 	userTermsOfService, err := c.App.GetUserTermsOfService(user.Id)
 	if err != nil && err.StatusCode != http.StatusNotFound {
-		c.Err = err
+		fmt.Println("login terms err", err)
+c.Err = err
 		return
 	}
 
@@ -1965,8 +1969,10 @@ func login(c *Context, w http.ResponseWriter, r *http.Request) {
 
 	auditRec.Success()
 	if err := json.NewEncoder(w).Encode(user); err != nil {
+ fmt.Println("login encode err", err)
 		c.Logger.Warn("Error while writing response", mlog.Err(err))
 	}
+fmt.Println("login done")
 }
 
 func loginWithDesktopToken(c *Context, w http.ResponseWriter, r *http.Request) {
