@@ -44,7 +44,7 @@ func (s *SyncloudAuth) authenticate_(id string, password string) error {
 
 func (s *SyncloudAuth) authenticate(id string, password string) error {
 	mlog.Warn("authenticate", mlog.String("id", id))
-	url := fmt.Sprint("ldap://", *s.app.Config().LdapSettings.LdapServer, *s.app.Config().LdapSettings.LdapPort)
+	url := fmt.Sprint("ldap://", *s.app.Config().LdapSettings.LdapServer, ":", *s.app.Config().LdapSettings.LdapPort)
 	conn, err := ldap.DialURL(url)
 	if err != nil {
 		return err
