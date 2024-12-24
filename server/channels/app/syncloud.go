@@ -50,7 +50,7 @@ func (s *SyncloudAuth) authenticate(id string, password string) error {
 		return err
 	}
 	defer conn.Close()
-	err = conn.Bind(fmt.Sprintf("cn=%s,dc=syncloud,dc=org", id), password)
+	err = conn.Bind(fmt.Sprintf("cn=%s,ou=users,dc=syncloud,dc=org", id), password)
 	if err != nil {
 		return err
 	}
