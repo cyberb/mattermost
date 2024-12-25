@@ -25,8 +25,7 @@ local build(arch) = [{
         'make setup-go-work',
         'make build-linux BUILD_NUMBER="$DRONE_BUILD_NUMBER"',
         'make prepackaged-plugins',
-        'cd templates && make build && cd ..',
-        'tar -czf server-' + arch + '-$DRONE_BUILD_NUMBER.tar.gz bin/mattermost bin/mmctl fonts i18n prepackaged_plugins templates'
+        'tar -czf server-' + arch + '-$DRONE_BUILD_NUMBER.tar.gz bin/mattermost bin/mmctl fonts i18n prepackaged_plugins'
       ],
     },
 
@@ -52,6 +51,7 @@ local build(arch) = [{
       name: 'build-web',
       image: "node:20.9.0",
       commands: [
+        'cd server/templates && make build && cd ../..',
         'cd webapp',
         'npm config set fetch-retry-mintimeout 200000',
         'npm config set fetch-retry-maxtimeout 1200000',
@@ -59,7 +59,7 @@ local build(arch) = [{
         'npm run build',
         'cd channels',
         'mv dist client',
-        'tar -czf web-$DRONE_BUILD_NUMBER.tar.gz client'
+        'tar -czf web-$DRONE_BUILD_NUMBER.tar.gz client templates'
       ],
     },
        {
