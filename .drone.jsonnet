@@ -23,7 +23,7 @@ local build(arch) = [{
       commands: [
         'cd server',
         'make setup-go-work',
-        'make build-linux BUILD_NUMBER='$DRONE_BUILD_NUMBER'
+        'make build-linux BUILD_NUMBER="$DRONE_BUILD_NUMBER"',
         'make prepackaged-plugins',
         'cd templates && make build && cd ..',
         'tar -czf server-' + arch + '-$DRONE_BUILD_NUMBER.tar.gz bin/mattermost bin/mmctl fonts i18n prepackaged_plugins templates'
