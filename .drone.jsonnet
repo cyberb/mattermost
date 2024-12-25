@@ -84,6 +84,7 @@ local build(arch) = [{
     event: [
       'push',
       'pull_request',
+      'tag'
     ],
   },
   volumes: [
