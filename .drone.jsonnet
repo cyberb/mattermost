@@ -59,7 +59,7 @@ local build(arch) = [{
         'npm run build',
         'cd channels',
         'mv dist client',
-        'tar -czf web-$DRONE_BUILD_NUMBER.tar.gz client server/templates'
+        'tar -czf web-$DRONE_BUILD_NUMBER.tar.gz client ../../server/templates'
       ],
     },
        {
