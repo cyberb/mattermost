@@ -136,7 +136,7 @@ const Login = ({onCustomizeHeader}: LoginProps) => {
     const enableSignUpWithOffice365 = EnableSignUpWithOffice365 === 'true';
     const enableSignUpWithOpenId = EnableSignUpWithOpenId === 'true';
     const isLicensed = IsLicensed === 'true';
-    const ldapEnabled = isLicensed && enableLdap;
+    const ldapEnabled = enableLdap;
     const enableSignUpWithSaml = isLicensed && enableSaml;
     const siteName = SiteName ?? '';
 

@@ -159,7 +159,7 @@ PLUGIN_PACKAGES += mattermost-plugin-boards-v9.0.0
 PLUGIN_PACKAGES += mattermost-plugin-msteams-v2.0.3
 PLUGIN_PACKAGES += mattermost-plugin-user-survey-v1.1.1
 PLUGIN_PACKAGES += mattermost-plugin-mscalendar-v1.3.4
-PLUGIN_PACKAGES += mattermost-plugin-msteams-meetings-v2.2.0
+PLUGIN_PACKAGES += mattermost-plugin-msteams-meetings-v2.1.0
 
 EE_PACKAGES=$(shell $(GO) list $(BUILD_ENTERPRISE_DIR)/...)
 

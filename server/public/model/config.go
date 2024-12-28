@@ -2345,10 +2345,12 @@ type LdapSettings struct {
 	BindPassword       *string `access:"authentication_ldap"` // telemetry: none
 
 	// Filtering
+	UserBaseDN        *string `access:"authentication_ldap"` // telemetry: none
 	UserFilter        *string `access:"authentication_ldap"` // telemetry: none
 	GroupFilter       *string `access:"authentication_ldap"`
 	GuestFilter       *string `access:"authentication_ldap"`
 	EnableAdminFilter *bool
+	AdminBaseDN       *string
 	AdminFilter       *string
 
 	// Group Mapping

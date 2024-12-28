@@ -340,15 +340,13 @@ func GenerateLimitedClientConfig(c *model.Config, telemetryID string, license *m
 	props["HideGuestTags"] = strconv.FormatBool(*c.GuestAccountsSettings.HideTags)
 	props["GuestAccountsEnforceMultifactorAuthentication"] = strconv.FormatBool(*c.GuestAccountsSettings.EnforceMultifactorAuthentication)
 
-	if license != nil {
-		if *license.Features.LDAP {
-			props["EnableLdap"] = strconv.FormatBool(*c.LdapSettings.Enable)
-			props["LdapLoginFieldName"] = *c.LdapSettings.LoginFieldName
-			props["LdapLoginButtonColor"] = *c.LdapSettings.LoginButtonColor
-			props["LdapLoginButtonBorderColor"] = *c.LdapSettings.LoginButtonBorderColor
-			props["LdapLoginButtonTextColor"] = *c.LdapSettings.LoginButtonTextColor
-		}
+	props["EnableLdap"] = strconv.FormatBool(*c.LdapSettings.Enable)
+	props["LdapLoginFieldName"] = *c.LdapSettings.LoginFieldName
+	props["LdapLoginButtonColor"] = *c.LdapSettings.LoginButtonColor
+	props["LdapLoginButtonBorderColor"] = *c.LdapSettings.LoginButtonBorderColor
+	props["LdapLoginButtonTextColor"] = *c.LdapSettings.LoginButtonTextColor
 
+	if license != nil {
 		if *license.Features.SAML {
 			props["EnableSaml"] = strconv.FormatBool(*c.SamlSettings.Enable)
 			props["SamlLoginButtonText"] = *c.SamlSettings.LoginButtonText

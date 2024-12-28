@@ -254,9 +254,9 @@ export default class Root extends React.PureComponent<Props, State> {
         }
 
         if (this.props.location.pathname === '/') {
-            if (this.props.noAccounts) {
+            /*if (this.props.noAccounts) {
                 prevProps.history.push('/signup_user_complete');
-            } else if (this.props.showTermsOfService) {
+            } else */if (this.props.showTermsOfService) {
                 prevProps.history.push('/terms_of_service');
             }
         }
