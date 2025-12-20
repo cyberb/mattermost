@@ -214,7 +214,7 @@ const Signup = ({onCustomizeHeader}: SignupProps) => {
             });
         }
 
-        if (isLicensed && enableLDAP) {
+        if (enableLDAP) {
             const newSearchParam = new URLSearchParams(search);
             newSearchParam.set('extra', Constants.CREATE_LDAP);
 
