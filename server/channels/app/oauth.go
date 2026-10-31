@@ -829,6 +829,10 @@ func (a *App) LoginByOAuth(rctx request.CTX, service string, userData io.Reader,
 		return nil, appErr
 	}
 
+	if authUser.IsSystemAdmin() && !user.IsSystemAdmin() {
+		return a.UpdateUserRoles(rctx, user.Id, user.Roles+" "+model.SystemAdminRoleId, false)
+	}
+
 	return user, nil
 }
 
@@ -1043,6 +1047,11 @@ func (a *App) AuthorizeOAuthUser(rctx request.CTX, w http.ResponseWriter, r *htt
 		return nil, nil, nil, e
 	}
 
+	client := a.HTTPService().MakeClient(false)
+	if p, ok := provider.(einterfaces.OAuthHTTPClient); ok && p.HTTPClient() != nil {
+		client = p.HTTPClient()
+	}
+
 	sso, e2 := provider.GetSSOSettings(rctx, a.Config(), service)
 	if e2 != nil {
 		return nil, nil, nil, model.NewAppError("AuthorizeOAuthUser.GetSSOSettings", "api.user.get_authorization_code.endpoint.app_error", nil, "", http.StatusNotImplemented).Wrap(e2)
@@ -1114,7 +1123,7 @@ func (a *App) AuthorizeOAuthUser(rctx request.CTX, w http.ResponseWriter, r *htt
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("Accept", "application/json")
 
-	resp, err := a.HTTPService().MakeClient(false).Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, stateProps, nil, model.NewAppError("AuthorizeOAuthUser", "api.user.authorize_oauth_user.token_failed.app_error", nil, "", http.StatusInternalServerError).Wrap(err)
 	}
@@ -1156,7 +1165,7 @@ func (a *App) AuthorizeOAuthUser(rctx request.CTX, w http.ResponseWriter, r *htt
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", "Bearer "+ar.AccessToken)
 
-	resp, err = a.HTTPService().MakeClient(false).Do(req)
+	resp, err = client.Do(req)
 	if err != nil {
 		return nil, stateProps, nil, model.NewAppError("AuthorizeOAuthUser", "api.user.authorize_oauth_user.service.app_error", map[string]any{"Service": service}, "", http.StatusInternalServerError).Wrap(err)
 	} else if resp.StatusCode != http.StatusOK {

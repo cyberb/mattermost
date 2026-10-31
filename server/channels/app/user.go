@@ -497,10 +497,17 @@ func (a *App) CreateOAuthUser(rctx request.CTX, service string, userData io.Read
 	}
 
 	user.EmailVerified = true
+	admin := user.IsSystemAdmin()
 
 	ruser, appErr := a.CreateUser(rctx, user)
 	if appErr != nil {
 		return nil, appErr
+	}
+
+	if admin && !ruser.IsSystemAdmin() {
+		if ruser, appErr = a.UpdateUserRoles(rctx, ruser.Id, ruser.Roles+" "+model.SystemAdminRoleId, false); appErr != nil {
+			return nil, appErr
+		}
 	}
 
 	if appErr = a.AddUserToTeamByInviteIfNeeded(rctx, ruser, inviteToken, inviteId); appErr != nil {

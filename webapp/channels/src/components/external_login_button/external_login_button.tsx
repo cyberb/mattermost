@@ -27,6 +27,7 @@ const ExternalLoginButton = ({
 }: ExternalLoginButtonType) => (
     <a
         id={id}
+        data-testid={id}
         className={classNames('external-login-button', {'direction-column': direction === 'column'}, id)}
         href={url}
         style={style}
