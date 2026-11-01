@@ -7,6 +7,7 @@ local node = "18-bookworm-slim";
 local platform = '22.02';
 local selenium = '4.21.0-20240517';
 local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
+local plugins = ['calls', 'agents'];
 
 local build(arch) = [{
   kind: 'pipeline',
@@ -62,7 +63,8 @@ local build(arch) = [{
         'make setup-go-work',
         'go test ./channels/app/oauthproviders/openid/',
         'make build-linux BUILD_NUMBER="$DRONE_TAG"',
-        'make prepackaged-plugins',
+        'make prepackaged-plugins PLUGIN_PACKAGES="$(grep -oE \'^PLUGIN_PACKAGES [+]= mattermost-plugin-(' + std.join('|', plugins) + ')-v[^ ]+\' Makefile | cut -d" " -f3 | xargs)"',
+        'test $(ls prepackaged_plugins/*.tar.gz | wc -l) -eq ' + std.length(plugins),
         'rm -rf /usr/local/go',
         'rm -rf /usr/lib/gcc',
         'tar -czf server-' + arch + '-$DRONE_TAG.tar.gz bin/mattermost bin/mmctl fonts i18n prepackaged_plugins /usr /lib'
